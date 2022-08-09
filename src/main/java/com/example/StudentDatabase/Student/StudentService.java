@@ -1,5 +1,6 @@
 package com.example.StudentDatabase.Student;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -10,22 +11,14 @@ import static java.util.Calendar.*;
 @Service
 public class StudentService implements StudentProtected {
 
+    private final StudentRepository studentRepository;
+
+    @Autowired
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
     public List<Student> getStudent() {
-        return List.of(
-                new Student(
-                        1L,
-                        "Mariam",
-                        "Mariam.jamal@gmail.com",
-                        LocalDate.of(1994, APRIL,28),
-                        21
-                ),
-                new Student(
-                        2L,
-                        "Michael",
-                        "Michael.sean@gmail.com",
-                        LocalDate.of(1990, SEPTEMBER,2),
-                        25
-                )
-        );
+        return studentRepository.findAll();
     }
 }
