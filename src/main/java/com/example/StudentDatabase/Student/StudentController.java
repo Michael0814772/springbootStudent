@@ -1,29 +1,35 @@
 package com.example.StudentDatabase.Student;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
-
-import static java.util.Calendar.*;
 
 @RestController
 @RequestMapping(path = "api/v1/student")
 public class StudentController {
 
     private final StudentProtected studentProtected;
+    private final StudentService studentService;
 
     @Autowired
-    public StudentController(StudentProtected studentProtected) {
+    public StudentController(StudentProtected studentProtected, StudentService studentService) {
         this.studentProtected = studentProtected;
+        this.studentService = studentService;
     }
 
     @GetMapping
     public List<Student> getStudent() {
         return studentProtected.getStudent();
+    }
+
+    @PostMapping
+    public void registerNewStudent(@RequestBody Student student) {
+        studentProtected.addNewStudent(student);
+    }
+
+    @DeleteMapping(path = "{studentId}")
+    public void deleteStudent(@PathVariable("studentId") Long id) {
+        studentProtected.deleteStudent(id);
     }
 }

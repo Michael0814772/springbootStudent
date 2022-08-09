@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Calendar.*;
 
@@ -20,5 +21,25 @@ public class StudentService implements StudentProtected {
 
     public List<Student> getStudent() {
         return studentRepository.findAll();
+    }
+
+    @Override
+    public void addNewStudent(Student student) {
+        Optional<Student> studentByEmail = studentRepository.findStudentByEmail(student.getEmail());
+
+        if (studentByEmail.isPresent()) {
+            throw new IllegalStateException("Email taken");
+        }
+        studentRepository.save(student);
+    }
+
+    @Override
+    public void deleteStudent(Long id) {
+        boolean exist = studentRepository.existsById(id);
+
+        if (!exist) {
+            throw new IllegalStateException("Student id " + id + " does not exists");
+        }
+        studentRepository.deleteById(id);
     }
 }
