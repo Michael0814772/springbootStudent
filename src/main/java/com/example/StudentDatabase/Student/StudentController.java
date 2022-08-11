@@ -10,12 +10,10 @@ import java.util.List;
 public class StudentController {
 
     private final StudentProtected studentProtected;
-    private final StudentService studentService;
 
     @Autowired
-    public StudentController(StudentProtected studentProtected, StudentService studentService) {
+    public StudentController(StudentProtected studentProtected) {
         this.studentProtected = studentProtected;
-        this.studentService = studentService;
     }
 
     @GetMapping
@@ -31,5 +29,13 @@ public class StudentController {
     @DeleteMapping(path = "{studentId}")
     public void deleteStudent(@PathVariable("studentId") Long id) {
         studentProtected.deleteStudent(id);
+    }
+
+    @PutMapping(path = "{studentId}")
+    public void updateStudent(
+            @PathVariable("studentId") Long studentId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email) {
+        studentProtected.updateStudent(studentId, name, email);
     }
 }
